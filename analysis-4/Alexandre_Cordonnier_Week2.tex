@@ -1,0 +1,111 @@
+\documentclass[12pt]{amsart}
+
+\usepackage{amssymb,amsmath,amsthm, amsfonts}
+%\usepackage[german]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[all,knot]{xy}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\oddsidemargin = 0.5cm 
+\evensidemargin = 0.5cm 
+\textwidth = 16cm
+\headsep = -1cm
+\textheight = 22cm
+
+\newtheorem{case}{Case}
+\newcommand{\caseif}{\textnormal{if }}
+\newcommand{\leg}[2]{\genfrac{(}{)}{}{}{#1}{#2}}
+\newcommand{\bfrac}[2]{\genfrac{}{}{}{0}{#1}{#2}}
+\newcommand{\sm}[4]{\left(\begin{smallmatrix}#1&#2\\ #3&#4 \end{smallmatrix} \right)}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{conjecture}{\bf Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\renewcommand{\thetheorem}{\thesection.\arabic{theorem}}
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{bonus_exercise}[exercise]{Exercise*}
+\newtheorem*{solution}{Solution}
+\newtheorem*{answer}{Answer}
+\theoremstyle{remark}
+\newtheorem*{claim}{Claim}
+%\newtheorem*{proof}{Proof}
+\newtheorem*{theoremno}{{\bf Theorem}}
+\newtheorem*{remark}{Remark}
+\newtheorem*{hint}{Hint}
+\newtheorem*{example}{Example}
+\numberwithin{theorem}{section}
+% \numberwithin{equation}{section}
+\newtheorem*{theorem*}{Theorem}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\def\Box{\operatorname{Box}}
+\def\Vol{\operatorname{Vol}}
+\newcommand{\m}{\mathrm{m}^{*}}
+\def\c{^{\mathsf{c}}}
+\newcommand{\eps}{\varepsilon}
+
+
+\begin{document}
+
+\noindent
+Name: Alexandre Cordonnier \\
+SCIPER: 310692 \\
+\begin{center}
+Exercises - Week 2 \\
+Analysis IV MATH-205 \\ Spring 2021
+\end{center}
+
+\stepcounter{exercise}
+\stepcounter{exercise}
+
+\begin{exercise}
+	If $A\subseteq\R^n$ and $E$ is the half-plane $E := \{(x_1,\ldots,x_n)\in\R^n:x_n>0\}$, show that $\m(A)=\m(A \cap E)+\m(A \backslash E)$.
+\end{exercise}
+
+\begin{solution}
+	$\forall A\subseteq\R^n$, we have by sub-additivity : $$\m(A)=\m((A\cap E)\cup(A\cap E\c))\leq \m(A \cap E)+\m(A \backslash E)$$.
+	We now have to prove the other way, i.e. $\m(A) \geq \m(A \cap E)+\m(A\backslash E)$.
+	By the definition of the outer measure $\m$ (with an infimum), for any $\eps>0$, we can find a cover of $A$ with open boxes $\{B_j\}_{j=1}^\infty$ such that $$\m(A)+\eps/2 \geq \sum_{j=1}^\infty\Vol(B_j)$$
+	
+	By definition of the open box $B_j = \{(x_1,\ldots,x_n)\in\R^n:a^{(j)}_i<x_i<b^{(j)}_i\ \text{ for }\ a^{(j)}_i,b^{(j)}_i\in\R,\ i=1,\ldots,n\}$, we have $\Vol(B_j) \neq 0 \ \forall j\in\N$. So we can define for $j\in\N$ : $$E_j = \left\{(x_1,\ldots,x_n)\in\R^n:x_n<\frac{\eps\cdot\left(b^{(j)}_n-a^{(j)}_n\right)}{2^{j+1}\cdot\Vol(B_j)}\right\}$$
+
+	An open cover of $A\cap E$ is $\{B_j\cap E\}_{j=1}^\infty$, because for all $j\in\N$, $B_j\cap E$ is open (finite intersections of open sets are open), and $E\cap A \subseteq E\cap\bigcup_{j=1}^\infty B_j = \bigcup_{j=1}^\infty \left(B_j\cap E\right)$.
+
+	An open cover of $A\backslash E=A\cap E\c$ is $\{B_j\cap E_j\}_{j=1}^\infty$, because for all $j\in\N$, $B_j\cap E_j$ is open (again, finite intersections of open sets are open), and $E\c\cap A \subseteq E\c\cap\bigcup_{j=1}^\infty B_j = \bigcup_{j=1}^\infty \left(B_j\cap E\c\right) \subseteq \bigcup_{j=1}^\infty \left(B_j\cap E_j\right)$, as $\forall j\in\N, E\c\subseteq E_j$.\\	
+	Now, we have \begin{align*}
+		\m(A\cap E) + \m(A\backslash E) &= \m(A\cap E) + \m(A\cap E\c)\\
+		&\leq \sum_{j=1}^\infty\Vol\left(B_j\cap E\right) + \sum_{j=1}^\infty\Vol\left(B_j\cap E_j\right)\\
+		&= \sum_{j=1}^\infty\left[\Vol\left(B_j\cap E\right) + \Vol\left(B_j\cap E_j\right)\right]\\
+		&= \sum_{j=1}^\infty\left[\Vol\left(B_j\cap E\right) + \Vol\left(B_j\cap E\c\right) +  \Vol\left(B_j\cap (E\cap E_j)\right)\right]\quad\quad \text{(1)}\\
+		&= \sum_{j=1}^\infty\left[\Vol\left(B_j\right) +  \Vol\left(B_j\cap (E\cap E_j)\right)\right]\\
+	\end{align*}
+	where, for (1), we used that $E_j = \left( E\c\cup E\right)\cap E_j = \left(E\c\cap E_j\right)\cup\left(E\cap E_j\right) = E\c\cup\left(E\cap E_j\right)$ which is a disjoint union.
+
+
+	As $\displaystyle E\cap E_j = \left\{(x_1,\ldots,x_n)\in\R^n:0<x_n<\frac{\eps\cdot(b^{(j)}_n-a^{(j)}_n)}{2^{j+1}\cdot\Vol(B_j)}\right\}$, we can write \begin{align*}
+		B_j\cap (E\cap E_j) &= (a^{(j)}_1,b^{(j)}_1)\times\cdots\times(a^{(j)}_{n-1},b^{(j)}_{n-1})\times\left((a^{(j)}_n,b^{(j)}_n)\cap(0,\eps(b^{(j)}_n-a^{(j)}_n)2^{-j-1}/\Vol(B_j))\right)\\
+		&= (a^{(j)}_1,b^{(j)}_1)\times\cdots\times(a^{(j)}_{n-1},b^{(j)}_{n-1})\times\left(\max(0, a^{(j)}_n), \min(b^{(j)}_n,\eps(b^{(j)}_n-a^{(j)}_n)2^{-j-1}/\Vol(B_j))\right)
+	\end{align*}
+	So we simply have \begin{align*}
+		\Vol(B_j\cap (E\cap E_j)) &= \frac{\Vol(B_j)}{b^{(j)}_n-a^{(j)}_n}\cdot\left(\min\left(b^{(j)}_n,\frac{\eps\cdot(b^{(j)}_n-a^{(j)}_n)}{2^{j+1}\cdot\Vol(B_j)}\right)-\max(0,a^{(j)}_n)\right)\\
+		&\leq \frac{\Vol(B_j)}{b^{(j)}_n-a^{(j)}_n}\cdot\frac{\eps\cdot(b^{(j)}_n-a^{(j)}_n)}{2^{j+1}\cdot\Vol(B_j)} = \frac\eps{2^{j+1}}
+	\end{align*}
+	We finally have \begin{align*}
+		\m(A\cap E) + \m(A\backslash E) &\leq \sum_{j=1}^\infty\left[\Vol\left(B_j\right) +  \Vol\left(B_j\cap (E\cap E_j)\right)\right]\\
+		&\leq \sum_{j=1}^\infty\left[\Vol\left(B_j\right) + \frac\eps{2^{j+1}}\right]\\
+		&= \frac\eps2 + \sum_{j=1}^\infty\Vol\left(B_j\right)\\
+		&\leq \frac\eps2 + \m(A) + \frac\eps2 \quad \text{by assumption on the open cover}\\
+		& = \m(A) + \eps
+	\end{align*}
+	As $\eps$ is arbitrary, we have $\m(A) \geq \m(A \cap E)+\m(A\backslash E)$, so we can conclude that $\m(A)=\m(A \cap E)+\m(A \backslash E)$.
+\end{solution}
+\end{document}
