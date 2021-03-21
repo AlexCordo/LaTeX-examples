@@ -1,0 +1,146 @@
+\documentclass[12pt]{amsart}
+
+\usepackage{amssymb,amsmath,amsthm, amsfonts}
+%\usepackage[german]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[all,knot]{xy}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\usepackage[numbered,framed]{matlab-prettifier}
+
+\oddsidemargin = 0.5cm 
+\evensidemargin = 0.5cm 
+\textwidth = 16cm
+\headsep = -1cm
+\textheight = 22.3cm
+
+\newtheorem{case}{Case}
+\newcommand{\caseif}{\textnormal{if }}
+\newcommand{\leg}[2]{\genfrac{(}{)}{}{}{#1}{#2}}
+\newcommand{\bfrac}[2]{\genfrac{}{}{}{0}{#1}{#2}}
+\newcommand{\sm}[4]{\left(\begin{smallmatrix}#1&#2\\ #3&#4 \end{smallmatrix} \right)}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{conjecture}{\bf Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+%\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\renewcommand{\thetheorem}{\thesection.\arabic{theorem}}
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{problem}{Problem}
+\newtheorem{bonus_exercise}[exercise]{Exercise*}
+\newtheorem*{solution}{Solution}
+\newtheorem*{answer}{Answer}
+\newtheorem*{claim}{Claim}
+\theoremstyle{remark}
+\newtheorem*{theoremno}{{\bf Theorem}}
+\newtheorem*{remark}{Remark}
+\newtheorem*{hint}{Hint}
+\newtheorem*{example}{Example}
+\numberwithin{theorem}{section}
+% \numberwithin{equation}{section}
+\newtheorem*{theorem*}{Theorem}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\begin{document}
+
+\noindent
+Name: Alexandre Cordonnier \\
+SCIPER: 310692 \\
+\begin{center}
+Exercises - Week 2 \\
+Numerical analysis MATH-250 \\ Spring 2021
+\end{center}
+\stepcounter{problem}
+\stepcounter{problem}
+\stepcounter{problem}
+\stepcounter{problem}
+\begin{problem}
+	\underline{Section 1:} Theory
+
+
+	\emph{We assume here $f$ has non-zero second derivative.}
+	\begin{enumerate}
+		\item[(a)]
+		As $f$ is $C^2$ in a neighborhood of $x\in\R$, we can use Taylor theorem to get, for $h>0$, $f(x+h)=f(x)+f'(x)h+\frac12f''(\theta_h)h^2$ for some $\theta_h\in(x,x+h)$, which implies $\frac{f(x+h)-f(x)}{h}-f'(x)=\frac12f''(\theta_h)h$, so we have $$\left|\frac{f(x+h)-f(x)}{h}-f'(x)\right|\leq Ch$$ where $C=\frac12\left|\lim\limits_{h\to 0}f''(\theta_h)\right|=\frac12\left|f''(x)\right|$ as $f''$ is continuous at $x$ by assumption.
+		\item[(b)]
+		For $|\delta_1|,|\delta_2|\leq u$, we have
+		\begin{align*}
+			&\left|\frac{f(x+h)(1+\delta_1)-f(x)(1+\delta_2)}{h}-\frac{f(x+h)-f(x)}{h}\right|\\
+			 &= \frac1h\left|f(x+h)(1+\delta_1)-f(x)(1+\delta_2)-f(x+h)-f(x)\right|\\
+			&=\frac1h\left|f(x+h)\delta_1-f(x)\delta_2\right|\\
+			&\leq\frac1h\left(\left|f(x+h)\right||\delta_1|+\left|f(x)\right||\delta_2|\right)\\
+			&\leq\frac u{h}\left(|f(x+h)|+|f(x)|\right)
+		\end{align*}
+		Using continuity of $f$ at $x$, we can define $c=\lim\limits_{h\to0}\left(|f(x+h)|+|f(x)|\right)=2|f(x)|$ so we have $$\left|\frac{f(x+h)(1+\delta_1)-f(x)(1+\delta_2)}{h}-\frac{f(x+h)-f(x)}{h}\right|\leq c\frac{u}{h}$$
+		\item[(c)]
+		Using upper bounds found in (a) and (b), we have
+		\begin{align*}
+			&\left|\frac{f(x+h)(1+\delta_1)-f(x)(1+\delta_2)}{h}-f'(x)\right|\\
+			&=\left|\frac{f(x+h)(1+\delta_1)-f(x)(1+\delta_2)}{h}-\frac{f(x+h)-f(x)}{h}+\frac{f(x+h)-f(x)}{h}-f'(x)\right|\\
+			&\leq\left|\frac{f(x+h)(1+\delta_1)-f(x)(1+\delta_2)}{h}-\frac{f(x+h)-f(x)}{h}\right|+\left|\frac{f(x+h)-f(x)}{h}-f'(x)\right|\\
+			&\leq Ch + c\frac{u}{h}
+		\end{align*}
+		\item[(d)]
+		We want to minimize $g(h) = Ch+c\frac{u}{h}$: we have $g'(h) = C - c\frac{u}{h^2}$, with extrema at $h_{min}=\sqrt{\frac{cu}{C}}$. As $g''(h) = 2\frac{cu}{h^3} >0$ for $h>0$, $h_{min}$ is in fact the minimum. Using the expressions of $c$ and $C$ we found earlier, we have $\displaystyle h_{min}=2\cdot\sqrt{\frac{u|f(x)|}{|f''(x)|}}$.\\
+		In order to verify the optimality of the theorical $h_{min}$ on an example, say $f(x)=\exp(x)$, we can plot the absolute error between the computed finite difference quotient and $\exp$ at $x=1$. In this case, theorical $h_{min}$ simplifies to $2\cdot\sqrt{u}$, with $u$ being the unit roundoff, defined as $u=\beta^{t-1}/2=\epsilon/2$. So $h_{min}=\sqrt{2\epsilon}$.\\
+		\lstinputlisting[style=Matlab-editor]{error_h.m}
+		Running file above (\verb|error_h.m|) yields the following plot,\\ and outputs \verb|Theorical minimum: h_min = 2.107342e-08|\begin{figure}[h!]
+			\includegraphics[width=\linewidth]{plot.jpg}
+		\end{figure}
+
+		The plot clearly shows a minimum at around \verb|2.1e^-08|, which is satisfying considering we computed $h_{min}$ to be \verb|2.107342e-08|.
+	\end{enumerate}
+
+	\underline{Section 2:} MATLAB
+
+	\begin{enumerate}
+		\item[(a)]
+		Here is the code of function \verb|roots2(p,q)|, returning roots of quadratic $x^2+p\cdot x+q$ in an array $[x_+,x_-]$. File \verb|roots2.m|:
+		\lstinputlisting[style=Matlab-editor]{roots2.m}
+		\item[(a),(b),(c)]
+		Running the following code (file \verb|main.m|) produces a table displaying the exact and computed roots, together with the relative error and the evaluation of the roots, for each of the three quadratics \verb|P1|,\verb|P2| and \verb|P3|. See outputs next page.
+		\lstinputlisting[style=Matlab-editor]{main.m}
+		\newpage
+		Table displayed:
+
+		
+		\begin{verbatim}
+               Exact        Computed      Relative error    Eval of computed
+            ___________    ___________    ______________    ________________
+
+P1 root+           -0.5           -0.5          0                  0        
+P1 root-             -2             -2          0                  0        
+P2 root+          1e+10          1e+10          0                  1        
+P2 root-          1e-10              0          1                  1        
+P3 root+    -9.3132e-10              0          1                  1        
+P3 root-    -1.0737e+09    -1.0737e+09          0                  1        
+		\end{verbatim}
+
+
+		\item[(d)]
+		For quadratic \verb|P2| and \verb|P3|, we have in magnitude \verb|m|$\gg$\verb|q| (where \verb|m=-p/2|), so when function \verb|roots2| computes \verb|m^2-q|, \verb|q| may be so small compared to \verb|m^2| that the operation \verb|m^2-q| returns \verb|m^2| because of the roundoff. Even if \verb|sqrt(m^2-q)| is actually computed somewhat accurately, the difference \verb|abs(m)-sqrt(m^2-q)| is really small (since $|x|-\sqrt{x^2-y}<|y/x|$, so for $x\gg y$ the result is very small), so it may be rouded off to 0.
+
+		As we said before, the root of the inaccuracy is when computing the value of $\pm$\verb|(abs(m)-sqrt(m^2-q))|, which happens for $x_+$ when \verb|m| is negative, i.e. \verb|p| is positive, and for $x_-$ when \verb|m| is positive, i.e. \verb|p| is negative. So the well approximated computed root is the one of the opposite sign of \verb|p|, which is verified by the above examples.
+		\item[(e)] 
+		Using \verb|x_bad=q/x_good|, we recover \verb|x_bad| for \verb|P2| and \verb|P3|, and evaluate \verb|P2(x2_bad)| and \verb|P3(x3_bad)| as follows:
+		\lstinputlisting[style=Matlab-editor]{e.m}
+		The output is
+
+		\begin{verbatim}
+			Evaluation of recovered root for quad P2: 0
+			Evaluation of recovered root for quad P3: 0
+		\end{verbatim}
+		We observe that the method to recover the poorly-approximated roots from the well-approximated ones works well, as we have here \verb|P2(x2_bad)=0| and \verb|P3(x3_bad)=0|.
+	\end{enumerate}
+\end{problem}
+
+\end{document}
